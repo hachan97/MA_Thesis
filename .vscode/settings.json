@@ -1,0 +1,9 @@
+{
+    "editor.wordWrap": "on",
+    "[python]": {
+        "editor.wordWrap": "on"
+    },
+    "[notebook]": {
+        "editor.wordWrap": "on"
+    }
+}
