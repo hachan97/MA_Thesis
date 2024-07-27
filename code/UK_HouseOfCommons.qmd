@@ -1,0 +1,103 @@
+---
+title: "UK_HouseOfCommons"
+author: "Haoting Chan"
+format: html
+editor: visual
+---
+
+# Setup
+
+```{r Setup}
+# Codes to install the need packaged and it'll output the package(s) that may have failed to load
+knitr::opts_chunk$set(echo = TRUE)
+p_needed <-
+  c("tidyverse",
+    "DataExplorer", "skimr",  "VIM",   # for EDA
+    "modelsummary",                    # Descriptive statistics & Models Summary
+    "haven", "foreign"                 # for STATA data type
+    )
+
+packages <- rownames(installed.packages())
+p_to_install <- p_needed[!(p_needed %in% packages)]
+
+if (length(p_to_install) > 0) {
+  install.packages(p_to_install)
+}
+sapply(p_needed, require, character.only = TRUE)
+```
+
+# Load Raw Data
+```{r}
+# Load the Corp_HouseOfCommons_V2.rds
+setwd("H:/MA_Thesis/")
+df_HoC <- readRDS("data/Corp_HouseOfCommons_V2.rds")
+
+df_HoC %>% head(10)
+```
+
+# EDA
+```{r}
+# Get Overiew
+dataset_overview <- plot_intro(df_HoC)
+```
+
+```{r}
+DGplot_categorical <- df_HoC %>% 
+  plot_bar(title = "Distribution of Categorical variables", ncol = 2)
+
+DGplot_continuous <- df_HoC %>% 
+  plot_histogram(title = "Distribution of Continuous variables", ncol = 2)
+
+DGplot_categorical
+DGplot_continuous
+```
+
+
+```{r}
+# Process and clean the dataset df_HoC
+df_HoC <- df_HoC %>% 
+  mutate(date = as.Date(date, format = "%Y-%m-%d"),
+         agenda = as.factor(agenda),
+         speaker = as.factor(speaker),
+         party = as.factor(party),
+         chair = as.factor(chair),
+         terms = as.factor(terms),
+         parliament = as.factor(parliament),
+         iso3country = as.factor(iso3country)) 
+
+# Filter for data between 1990 to 2020
+df_HoC_filter <- df_HoC %>% 
+  filter(date >= "2000-01-01" & date <= "2020-12-31")
+```
+
+```{r}
+# Create separate Dataframe for each party
+df_Lab <- df_HoC_filter %>% filter(party == "Lab")
+df_Con <- df_HoC_filter %>% filter(party == "Con")
+df_LibDem <- df_HoC_filter %>% filter(party == "LibDem")
+df_SNP <- df_HoC_filter %>% filter(party == "SNP")
+df_PlaidCymru <- df_HoC_filter %>% filter(party == "PlaidCymru")
+df_UKIP <- df_HoC_filter %>% filter(party == "UKIP")
+df_GPEW <- df_HoC_filter %>% filter(party == "GPEW")
+df_Independent <- df_HoC_filter %>% filter(party == "Independent")
+df_DUP <- df_HoC_filter %>% filter(party == "DUP")
+df_UUP <- df_HoC_filter %>% filter(party == "UUP")
+df_SDLP <- df_HoC_filter %>% filter(party == "SDLP")
+df_APNI <- df_HoC_filter %>% filter(party == "APNI")
+df_Respect <- df_HoC_filter %>% filter(party == "Respect")
+df_UKUP <- df_HoC_filter %>% filter(party == "UKUP")
+df_ChangeUK <- df_HoC_filter %>% filter(party == "Change UK")
+df_TheIndependents <- df_HoC_filter %>% filter(party == "The Independents")
+df_BirkenheadSocialJustice <- df_HoC_filter %>% filter(party == "Birkenhead Social Justice")
+df_other <- df_HoC_filter %>% filter(party == "other")
+
+
+df_Con %>% colnames()
+```
+
+
+
+
+
+
+
