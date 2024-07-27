@@ -12,6 +12,7 @@ editor: visual
 knitr::opts_chunk$set(echo = TRUE)
 p_needed <-
   c("tidyverse",
+    "tidytext",
     "DataExplorer", "skimr",  "VIM",   # for EDA
     "modelsummary",                    # Descriptive statistics & Models Summary
     "haven", "foreign"                 # for STATA data type
@@ -27,77 +28,134 @@ sapply(p_needed, require, character.only = TRUE)
 ```
 
 # Load Raw Data
+
 ```{r}
 # Load the Corp_HouseOfCommons_V2.rds
-setwd("H:/MA_Thesis/")
-df_HoC <- readRDS("data/Corp_HouseOfCommons_V2.rds")
+setwd("C:/Users/Bryan Chan/Documents/Projects/thesis_data/") #OR setwd("H:/MA_Thesis/data/")
 
-df_HoC %>% head(10)
+df_HoC_raw <- readRDS("Corp_HouseOfCommons_V2.rds")
+df_HoC_raw %>% head(10)
 ```
 
-# EDA
-```{r}
-# Get Overiew
-dataset_overview <- plot_intro(df_HoC)
-```
-
-```{r}
-DGplot_categorical <- df_HoC %>% 
-  plot_bar(title = "Distribution of Categorical variables", ncol = 2)
-
-DGplot_continuous <- df_HoC %>% 
-  plot_histogram(title = "Distribution of Continuous variables", ncol = 2)
-
-DGplot_categorical
-DGplot_continuous
-```
-
-
+# Preprocess
 ```{r}
 # Process and clean the dataset df_HoC
-df_HoC <- df_HoC %>% 
+df_HoC <- df_HoC_raw %>% 
+  select(-c(parliament,iso3country)) %>% 
   mutate(date = as.Date(date, format = "%Y-%m-%d"),
          agenda = as.factor(agenda),
          speaker = as.factor(speaker),
          party = as.factor(party),
          chair = as.factor(chair),
-         terms = as.factor(terms),
-         parliament = as.factor(parliament),
-         iso3country = as.factor(iso3country)) 
+         terms = as.factor(terms)) 
 
-# Filter for data between 1990 to 2020
-df_HoC_filter <- df_HoC %>% 
+df_HoC_2000s <- df_HoC %>% 
   filter(date >= "2000-01-01" & date <= "2020-12-31")
 ```
 
+# Create Party DF
 ```{r}
 # Create separate Dataframe for each party
-df_Lab <- df_HoC_filter %>% filter(party == "Lab")
-df_Con <- df_HoC_filter %>% filter(party == "Con")
-df_LibDem <- df_HoC_filter %>% filter(party == "LibDem")
-df_SNP <- df_HoC_filter %>% filter(party == "SNP")
-df_PlaidCymru <- df_HoC_filter %>% filter(party == "PlaidCymru")
-df_UKIP <- df_HoC_filter %>% filter(party == "UKIP")
-df_GPEW <- df_HoC_filter %>% filter(party == "GPEW")
-df_Independent <- df_HoC_filter %>% filter(party == "Independent")
-df_DUP <- df_HoC_filter %>% filter(party == "DUP")
-df_UUP <- df_HoC_filter %>% filter(party == "UUP")
-df_SDLP <- df_HoC_filter %>% filter(party == "SDLP")
-df_APNI <- df_HoC_filter %>% filter(party == "APNI")
-df_Respect <- df_HoC_filter %>% filter(party == "Respect")
-df_UKUP <- df_HoC_filter %>% filter(party == "UKUP")
-df_ChangeUK <- df_HoC_filter %>% filter(party == "Change UK")
-df_TheIndependents <- df_HoC_filter %>% filter(party == "The Independents")
-df_BirkenheadSocialJustice <- df_HoC_filter %>% filter(party == "Birkenhead Social Justice")
-df_other <- df_HoC_filter %>% filter(party == "other")
+df_Lab <- df_HoC_2000s %>% filter(party == "Lab")
+df_Con <- df_HoC_2000s %>% filter(party == "Con")
+df_LibDem <- df_HoC_2000s %>% filter(party == "LibDem")
+df_SNP <- df_HoC_2000s %>% filter(party == "SNP")
+df_PlaidCymru <- df_HoC_2000s %>% filter(party == "PlaidCymru")
+df_UKIP <- df_HoC_2000s %>% filter(party == "UKIP")
+df_GPEW <- df_HoC_2000s %>% filter(party == "GPEW")
+df_Independent <- df_HoC_2000s %>% filter(party == "Independent")
+df_DUP <- df_HoC_2000s %>% filter(party == "DUP")
+df_UUP <- df_HoC_2000s %>% filter(party == "UUP")
+df_SDLP <- df_HoC_2000s %>% filter(party == "SDLP")
+df_APNI <- df_HoC_2000s %>% filter(party == "APNI")
+df_Respect <- df_HoC_2000s %>% filter(party == "Respect")
+df_UKUP <- df_HoC_2000s %>% filter(party == "UKUP")
+df_ChangeUK <- df_HoC_2000s %>% filter(party == "Change UK")
+df_TheIndependents <- df_HoC_2000s %>% filter(party == "The Independents")
+df_BirkenheadSocialJustice <- df_HoC_2000s %>% filter(party == "Birkenhead Social Justice")
+df_other <- df_HoC_2000s %>% filter(party == "other")
 
+# Save the dataframes into csv.
+setwd("C:/Users/Bryan Chan/Documents/Projects/thesis_data/")
+write.csv(df_Lab, "df_Lab.csv", row.names = FALSE)
+write.csv(df_Con, "df_Con.csv", row.names = FALSE)
+write.csv(df_LibDem, "df_LibDem.csv", row.names = FALSE)
+write.csv(df_SNP, "df_SNP.csv", row.names = FALSE)
+write.csv(df_PlaidCymru, "df_PlaidCymru.csv", row.names = FALSE)
+write.csv(df_UKIP, "df_UKIP.csv", row.names = FALSE)
+write.csv(df_GPEW, "df_GPEW.csv", row.names = FALSE)
+write.csv(df_Independent, "df_Independent.csv", row.names = FALSE)
+write.csv(df_DUP, "df_DUP.csv", row.names = FALSE)
+write.csv(df_UUP, "df_UUP.csv", row.names = FALSE)
+write.csv(df_SDLP, "df_SDLP.csv", row.names = FALSE)
+write.csv(df_APNI, "df_APNI.csv", row.names = FALSE)
+write.csv(df_Respect, "df_Respect.csv", row.names = FALSE)
+write.csv(df_UKUP, "df_UKUP.csv", row.names = FALSE)
+write.csv(df_ChangeUK, "df_ChangeUK.csv", row.names = FALSE)
+write.csv(df_TheIndependents, "df_TheIndependents.csv", row.names = FALSE)
+write.csv(df_BirkenheadSocialJustice, "df_BirkenheadSocialJustice.csv", row.names = FALSE)
+write.csv(df_other, "df_other.csv", row.names = FALSE)
 
-df_Con %>% colnames()
 ```
 
+# EDA
 
+```{r}
+# Get Overiew
+dataset_overview <- plot_intro(df_HoC_raw)
+```
 
+```{r}
+DGplot_categorical <- df_HoC_2000s %>% 
+  plot_bar(title = "Distribution of Categorical variables", ncol = 2)
 
+DGplot_continuous <- df_HoC_2000s %>% 
+  plot_histogram(title = "Distribution of Continuous variables", ncol = 2)
+```
+```{r}
+# Speech Over Time
+plot_speech_overTime <- df_HoC_2000s %>%
+  ggplot(aes(x = date)) +
+  geom_line(stat = "count") +
+  labs(x = "Date", y = "Count", title = "Distribution of Dates")
 
+# Speeches by Party
+plot_speech_byParty <- df_HoC_2000s %>%
+  group_by(party) %>%
+  summarise(n = n()) %>%
+  filter(n > 1000) %>%       # only speeches above 1000
+  ggplot(aes(x = party, y = n)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Party", y = "Count", title = "Number of Speeches by Party") 
+
+# Speech Length
+plot_speech_length <- df_HoC_2000s %>%
+  mutate(speech_length = str_count(text, "\\S+")) %>%
+  ggplot(aes(x = party, y = speech_length)) +
+  geom_boxplot() +
+  labs(x = "Party", y = "Speech Length", title = "Speech Length by Party")
+
+# Speech Term Frequency
+plot_Term_Frequency <- df_HoC_2000s %>%
+  unnest_tokens(word, text) %>%
+  count(word, sort = TRUE) %>%
+  filter(!word %in% stop_words$word) %>%
+  head(10) %>%
+  ggplot(aes(reorder(word, n), n)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "Word", y = "Count", title = "Most Common Words in Speeches")
+
+# Top 10 most frequent speakers
+plot_Top10_speakers <- df_HoC_2000s %>%
+  group_by(speaker) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  head(10) %>%
+  ggplot(aes(reorder(speaker, n), n)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "Speaker", y = "Count", title = "Top 10 Most Frequent Speakers")
+```
 
 
