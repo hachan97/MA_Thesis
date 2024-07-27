@@ -15,7 +15,7 @@ p_needed <-
     "tidytext",
     "DataExplorer", "skimr",  "VIM",   # for EDA
     "modelsummary",                    # Descriptive statistics & Models Summary
-    "haven", "foreign"                 # for STATA data type
+    "haven", "foreign", "here"         # for STATA data type
     )
 
 packages <- rownames(installed.packages())
@@ -31,13 +31,15 @@ sapply(p_needed, require, character.only = TRUE)
 
 ```{r}
 # Load the Corp_HouseOfCommons_V2.rds
-setwd("C:/Users/Bryan Chan/Documents/Projects/thesis_data/") #OR setwd("H:/MA_Thesis/data/")
 
-df_HoC_raw <- readRDS("Corp_HouseOfCommons_V2.rds")
+#setwd("C:/Users/Bryan Chan/Documents/Projects/MA_Thesis/") 
+
+df_HoC_raw <- readRDS(here("data/Corp_HouseOfCommons_V2.rds"))
 df_HoC_raw %>% head(10)
 ```
 
 # Preprocess
+
 ```{r}
 # Process and clean the dataset df_HoC
 df_HoC <- df_HoC_raw %>% 
@@ -54,6 +56,7 @@ df_HoC_2000s <- df_HoC %>%
 ```
 
 # Create Party DF
+
 ```{r}
 # Create separate Dataframe for each party
 df_Lab <- df_HoC_2000s %>% filter(party == "Lab")
@@ -76,25 +79,26 @@ df_BirkenheadSocialJustice <- df_HoC_2000s %>% filter(party == "Birkenhead Socia
 df_other <- df_HoC_2000s %>% filter(party == "other")
 
 # Save the dataframes into csv.
-setwd("C:/Users/Bryan Chan/Documents/Projects/thesis_data/")
+setwd("C:/Users/Bryan Chan/Documents/Projects/MA_Thesis/data/")
 write.csv(df_Lab, "df_Lab.csv", row.names = FALSE)
 write.csv(df_Con, "df_Con.csv", row.names = FALSE)
 write.csv(df_LibDem, "df_LibDem.csv", row.names = FALSE)
-write.csv(df_SNP, "df_SNP.csv", row.names = FALSE)
-write.csv(df_PlaidCymru, "df_PlaidCymru.csv", row.names = FALSE)
-write.csv(df_UKIP, "df_UKIP.csv", row.names = FALSE)
-write.csv(df_GPEW, "df_GPEW.csv", row.names = FALSE)
-write.csv(df_Independent, "df_Independent.csv", row.names = FALSE)
-write.csv(df_DUP, "df_DUP.csv", row.names = FALSE)
-write.csv(df_UUP, "df_UUP.csv", row.names = FALSE)
-write.csv(df_SDLP, "df_SDLP.csv", row.names = FALSE)
-write.csv(df_APNI, "df_APNI.csv", row.names = FALSE)
-write.csv(df_Respect, "df_Respect.csv", row.names = FALSE)
-write.csv(df_UKUP, "df_UKUP.csv", row.names = FALSE)
-write.csv(df_ChangeUK, "df_ChangeUK.csv", row.names = FALSE)
-write.csv(df_TheIndependents, "df_TheIndependents.csv", row.names = FALSE)
-write.csv(df_BirkenheadSocialJustice, "df_BirkenheadSocialJustice.csv", row.names = FALSE)
-write.csv(df_other, "df_other.csv", row.names = FALSE)
+
+#write.csv(df_SNP, "df_SNP.csv", row.names = FALSE)
+#write.csv(df_PlaidCymru, "df_PlaidCymru.csv", row.names = FALSE)
+#write.csv(df_UKIP, "df_UKIP.csv", row.names = FALSE)
+#write.csv(df_GPEW, "df_GPEW.csv", row.names = FALSE)
+#write.csv(df_Independent, "df_Independent.csv", row.names = FALSE)
+#write.csv(df_DUP, "df_DUP.csv", row.names = FALSE)
+#write.csv(df_UUP, "df_UUP.csv", row.names = FALSE)
+#write.csv(df_SDLP, "df_SDLP.csv", row.names = FALSE)
+#write.csv(df_APNI, "df_APNI.csv", row.names = FALSE)
+#write.csv(df_Respect, "df_Respect.csv", row.names = FALSE)
+#write.csv(df_UKUP, "df_UKUP.csv", row.names = FALSE)
+#write.csv(df_ChangeUK, "df_ChangeUK.csv", row.names = FALSE)
+#write.csv(df_TheIndependents, "df_TheIndependents.csv", row.names = FALSE)
+#write.csv(df_BirkenheadSocialJustice, "df_BirkenheadSocialJustice.csv", row.names = FALSE)
+#write.csv(df_other, "df_other.csv", row.names = FALSE)
 
 ```
 
@@ -112,6 +116,7 @@ DGplot_categorical <- df_HoC_2000s %>%
 DGplot_continuous <- df_HoC_2000s %>% 
   plot_histogram(title = "Distribution of Continuous variables", ncol = 2)
 ```
+
 ```{r}
 # Speech Over Time
 plot_speech_overTime <- df_HoC_2000s %>%
@@ -157,5 +162,3 @@ plot_Top10_speakers <- df_HoC_2000s %>%
   coord_flip() +
   labs(x = "Speaker", y = "Count", title = "Top 10 Most Frequent Speakers")
 ```
-
-
