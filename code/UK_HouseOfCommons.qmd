@@ -29,6 +29,10 @@ sapply(p_needed, require, character.only = TRUE)
 
 # Load Raw Data
 
+Data set is from Harvard Dataverse: ParlSpeech V2 data set
+https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/L4OAKN
+
+
 ```{r}
 # Load the Corp_HouseOfCommons_V2.rds
 
