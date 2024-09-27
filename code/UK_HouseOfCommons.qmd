@@ -55,6 +55,15 @@ df_HoC_2000s <- df_HoC %>%
   filter(date >= "2000-01-01" & date <= "2020-12-31")
 ```
 
+
+```{r}
+# Save df_HoC as Rdata. in the data folder
+setwd("C:/Users/Bryan Chan/Documents/Projects/MA_Thesis/") 
+
+#saveRDS(df_HoC, "data/df_HoC.rds")
+saveRDS(df_HoC_2000s, "data/df_HoC_2000s.rds")
+```
+
 # Create Party DF
 
 ```{r}
@@ -118,11 +127,14 @@ DGplot_continuous <- df_HoC_2000s %>%
 ```
 
 ```{r}
+setwd("C:/Users/Bryan Chan/Documents/Projects/MA_Thesis/outputs/") 
+
 # Speech Over Time
 plot_speech_overTime <- df_HoC_2000s %>%
   ggplot(aes(x = date)) +
   geom_line(stat = "count") +
   labs(x = "Date", y = "Count", title = "Distribution of Dates")
+ggsave("plot_speech_overTime.png", plot_speech_overTime)
 
 # Speeches by Party
 plot_speech_byParty <- df_HoC_2000s %>%
@@ -132,6 +144,7 @@ plot_speech_byParty <- df_HoC_2000s %>%
   ggplot(aes(x = party, y = n)) +
   geom_bar(stat = "identity") +
   labs(x = "Party", y = "Count", title = "Number of Speeches by Party") 
+ggsave("plot_speech_byParty.png", plot_speech_byParty)
 
 # Speech Length
 plot_speech_length <- df_HoC_2000s %>%
@@ -139,6 +152,7 @@ plot_speech_length <- df_HoC_2000s %>%
   ggplot(aes(x = party, y = speech_length)) +
   geom_boxplot() +
   labs(x = "Party", y = "Speech Length", title = "Speech Length by Party")
+ggsave("plot_speech_length.png", plot_speech_length)
 
 # Speech Term Frequency
 plot_Term_Frequency <- df_HoC_2000s %>%
@@ -150,6 +164,7 @@ plot_Term_Frequency <- df_HoC_2000s %>%
   geom_col() +
   coord_flip() +
   labs(x = "Word", y = "Count", title = "Most Common Words in Speeches")
+ggsave("plot_Term_Frequency.png", plot_Term_Frequency)
 
 # Top 10 most frequent speakers
 plot_Top10_speakers <- df_HoC_2000s %>%
@@ -161,4 +176,5 @@ plot_Top10_speakers <- df_HoC_2000s %>%
   geom_col() +
   coord_flip() +
   labs(x = "Speaker", y = "Count", title = "Top 10 Most Frequent Speakers")
+ggsave("plot_Top10_speakers.png", plot_Top10_speakers)
 ```
