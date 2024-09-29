@@ -4,7 +4,9 @@
 # Data Files
 data/Rauh_Schwalbach_2020_ParlSpeech/Corp_HouseOfCommons_V2.rds
 data/Rauh_Schwalbach_2020_ParlSpeech/df_HoC.rds
-data/Blumenau_2021/*
-#data/df_Con.csv
-#data/df_Lab.csv
-#data/df_LibDem.csv
+data/Rauh_Schwalbach_2020_ParlSpeech/df_Con.csv
+data/Rauh_Schwalbach_2020_ParlSpeech/df_Lab.csv
+data/Rauh_Schwalbach_2020_ParlSpeech/df_LibDem.csv
+
+#data/Blumenau_2021/
+
