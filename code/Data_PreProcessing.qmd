@@ -47,11 +47,45 @@ df_HoC_2016_raw %>%
   arrange(desc(count)) %>% 
   head(10)
 
+df_HoC_2016 <- df_HoC_2016_raw %>% 
+  select(name, hdate, body, parent, n_words)
+
 # Sum up the numbers in the 'n_words' column for name == 'Boris Johnson'
 df_HoC_2016_raw %>% 
   filter(name == "Boris Johnson") %>% 
   summarise(total_words = sum(n_words))
+
+
 ```
+
+```{r}
+# Histogram showing Distribution of df_HoC_2016 n_words
+ggplot(df_HoC_2016, aes(x = n_words)) +
+  geom_histogram(binwidth = 10, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of n_words in df_HoC_2016",
+       x = "Number of Words",
+       y = "Frequency") +
+  theme_minimal()
+
+# Top 20 Most appeared names in the 'name' column of df_HoC_2016
+df_HoC_2016 %>% 
+  count(name, sort = TRUE) %>% 
+  head(20) %>% 
+  ggplot(aes(x = reorder(name, n), y = n)) +
+  geom_col(fill = "blue", color = "black", alpha = 0.7) +
+  coord_flip() +
+  labs(title = "Top 20 Most appeared names in df_HoC_2016",
+       x = "Name",
+       y = "Frequency") +
+  theme_minimal()
+
+# Investigate if the 'parent' column contains words like 'applaus'
+df_HoC_2016 %>% 
+  filter(str_detect(parent, "applaus")) %>% 
+  select(parent, body) %>% 
+  head(10)
+```
+
 
 ## ParlSpeech (2020)
 
