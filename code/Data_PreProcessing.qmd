@@ -93,9 +93,9 @@ Data set from Harvard Dataverse: ParlSpeech V2 data set https://dataverse.harvar
 
 ```{r}
 # Load the Rauh_Schwalbach_2020_ParlSpeech
+setwd("H:/MA_Thesis/data/Rauh_Schwalbach_2020_ParlSpeech/")
 
-#setwd("C:/Users/Bryan Chan/Documents/Projects/MA_Thesis/data/") 
-df_HoC_raw <- readRDS(here("Corp_HouseOfCommons_V2.rds"))
+df_HoC_raw <- readRDS("Corp_HouseOfCommons_V2.rds")
 df_HoC_raw %>% head(10)
 ```
 
@@ -118,11 +118,59 @@ df_HoC_2000s <- df_HoC %>%
 
 ```{r}
 # Save df_HoC as Rdata. in the data folder
-setwd("C:/Users/Bryan Chan/Documents/Projects/MA_Thesis/") 
+setwd("H:/MA_Thesis/data/Rauh_Schwalbach_2020_ParlSpeech/")
 
-#saveRDS(df_HoC, "data/df_HoC.rds")
-saveRDS(df_HoC_2000s, "data/df_HoC_2000s.rds")
+# save df_HoC_2000s as csv.
+write.csv(df_HoC_2000s, "df_HoC_2000s.csv", row.names = FALSE)
 ```
+
+
+```{r}
+# 
+# How may rows in between the subsequent 'Boris Johnson' appear in the 'speaker' column of df_HoC_2000s
+df_HoC_2000s %>% 
+  filter(speaker == "Boris Johnson") %>% 
+  mutate(row_number = row_number()) %>% 
+  select(row_number) %>% 
+  mutate(diff = row_number - lag(row_number, n = 1, default = 0)) %>% 
+  filter(diff > 1) %>% 
+  summarise(n = n())
+```
+
+
+```{r}
+trainingdata_Johnson <- df_HoC_2000s %>%
+  group_by(date) %>% 
+  mutate(context = lag(text, n = 1, default = ""),   # Previous utterance
+         context_2 = lag(text, n = 2, default = ""), # Second previous utterance
+         context_3 = lag(text, n = 3, default = ""), # Third previous utterance
+         combined_context = paste(context_3, context_2, context, sep = " | ")) %>%
+  filter(speaker == "Boris Johnson") %>%
+  select(date, combined_context, text) %>%
+  rename(input = combined_context, output = text)
+
+############ OR ###############
+
+trainingdata_Johnson <- df_HoC_2000s %>%
+  group_by(date, agenda) %>% # Group by both date and agenda
+  mutate(
+    context = lag(if_else(speaker != "Boris Johnson", text, ""), 
+                  n = 1, default = ""),   # Previous utterance, excluding Boris Johnson
+    context_2 = lag(if_else(speaker != "Boris Johnson", text, ""), 
+                    n = 2, default = ""), # Second previous utterance, excluding Boris Johnson
+    context_3 = lag(if_else(speaker != "Boris Johnson", text, ""), 
+                    n = 3, default = ""), # Third previous utterance, excluding Boris Johnson
+    combined_context = paste(context_3, context_2, context, sep = " | ")                # Combine contexts
+  ) %>%
+  filter(speaker == "Boris Johnson") %>% # Keep only rows where the speaker is Boris Johnson
+  select(date, agenda, combined_context, text) %>% # Select relevant columns
+  rename(input = combined_context, output = text) # Rename for fine-tuning format
+
+
+```
+
+
+
 
 # Create Subsets
 
