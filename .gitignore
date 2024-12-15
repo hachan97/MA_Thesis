@@ -7,7 +7,7 @@ data/Rauh_Schwalbach_2020_ParlSpeech/df_HoC.rds
 data/Rauh_Schwalbach_2020_ParlSpeech/df_Con.csv
 data/Rauh_Schwalbach_2020_ParlSpeech/df_Lab.csv
 data/Rauh_Schwalbach_2020_ParlSpeech/df_LibDem.csv
-data/Rauh_Schwalbach_2020_ParlSpeech/df_Boris_Johnson_2001-19.csv
+data/Rauh_Schwalbach_2020_ParlSpeech/*csv
 
 data/Blumenau_2021/*csv
 data/Blumenau_2021/*xlsx
