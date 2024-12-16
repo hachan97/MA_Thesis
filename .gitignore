@@ -1,5 +1,6 @@
 .env
 .Rproj.user
+.Rhistory
 
 # Data Files
 data/Rauh_Schwalbach_2020_ParlSpeech/Corp_HouseOfCommons_V2.rds
@@ -18,4 +19,5 @@ venv/
 # Code Files
 code/chatbot_whatsapp.ipynb
 
-
+# Results
+results/HoC_boris_johnson.jsonl

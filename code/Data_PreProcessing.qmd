@@ -131,6 +131,29 @@ df_HoC_2000s %>%
   arrange(diff)
 ```
 
+```{r}
+# which year has the most of where speeches by Boris Johnson?
+df_HoC_2000s %>%
+  filter(speaker == "Boris Johnson") %>%
+  mutate(year = year(date)) %>%
+  count(year) %>%
+  ggplot(aes(x = year, y = n)) +
+  geom_col() +
+  labs(title = "Number of Speeches by Boris Johnson by Year",
+       x = "Year",
+       y = "Count")
+
+# Summarize the distribution of 'terms'
+df_HoC_2000s %>% 
+  count(terms) %>% 
+  ggplot(aes(x = terms, y = n)) +
+  geom_col(fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of 'terms' in df_HoC_2000s",
+       x = "Terms",
+       y = "Frequency") +
+  theme_minimal()
+```
+
 
 
 
