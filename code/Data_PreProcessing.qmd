@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 p_needed <-
   c("tidyverse",
     "tidytext",
+    "stringi",                         # for string manipulation
     "DataExplorer", "skimr",  "VIM",   # for EDA
     "modelsummary",                    # Descriptive statistics & Models Summary
     "haven", "foreign", "here"         # for STATA data type
@@ -29,7 +30,7 @@ sapply(p_needed, require, character.only = TRUE)
 
 # Load Raw Data
 
-## Blumenau(2021)
+## Blumenau(2021): 1979 - 2019
 
 Data set from Blumenau, Jack (2021). House of Commons Parliamentary Debates, 1979-2019
 
@@ -87,35 +88,107 @@ df_HoC_2016 %>%
 ```
 
 
-## ParlSpeech (2020)
+## ParlSpeech (2020): 1988 - 2019
 
-Data set from Harvard Dataverse: ParlSpeech V2 data set https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/L4OAKN
+Data set from Harvard Dataverse: ParlSpeech V2 data set. UK House of Commons, 1988 - 2019 https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/L4OAKN
 
 ```{r}
 # Load the Rauh_Schwalbach_2020_ParlSpeech
-setwd("H:/MA_Thesis/data/Rauh_Schwalbach_2020_ParlSpeech/")
+#setwd("H:/MA_Thesis/data/Rauh_Schwalbach_2020_ParlSpeech/")
 
 df_HoC_raw <- readRDS("Corp_HouseOfCommons_V2.rds")
+
+df_HoC_raw <- readRDS("C:/Users/chanho/Downloads/Corp_HouseOfCommons_V2.rds")
+
 df_HoC_raw %>% head(10)
 ```
 
 
 ```{r}
 # Process and clean the dataset df_HoC
-df_HoC <- df_HoC_raw %>% 
-  select(-c(parliament,iso3country)) %>% 
-  mutate(date = as.Date(date, format = "%Y-%m-%d"),
-         agenda = as.factor(agenda),
-         speaker = as.factor(speaker),
-         party = as.factor(party),
-         chair = as.factor(chair),
-         terms = as.factor(terms)) 
+df_HoC_2000s <- df_HoC_raw %>% 
+  select(-c(parliament, iso3country)) %>% 
+  mutate(
+    date = as.Date(date, format = "%Y-%m-%d"),
+    agenda = as.factor(agenda),
+    speaker = as.factor(speaker),
+    party = as.factor(party),
+    chair = as.factor(chair),
+    terms = as.factor(terms)
+  ) %>% 
+  filter(date >= "2000-01-01" & date <= "2020-12-31") %>% 
+  
+  # Enhanced text cleaning
+  mutate(text = stri_unescape_unicode(text) %>%  # Decode Unicode artifacts
+           str_replace_all("\\s+", " ") %>%       # Normalize whitespace
+           str_trim() %>%                         # Trim leading/trailing spaces
+      
+      # Replace specific Unicode artifacts
+      str_replace_all("\\u00c2\\u00a3", "£") %>% 
+      str_replace_all("\\u00e2\\u20ac\\u0153", "€") %>%
+      str_replace_all("\\u00e2\\u20ac\\u009d", "”") %>%
+      str_replace_all("\\u00e2\\u20ac\\u02dc", "'") %>% 
+      str_replace_all("\\u00e2\\u20ac\\u02dcs", "'s") %>% 
+      str_replace_all("\\u00e2\\u20ac\\u201c", "–") %>% 
+      str_replace_all("\\u00e2\\u20ac\\u201d", "—") %>% 
+      str_replace_all("\\u00e2\\u20ac\\u02dc", "‘") %>% 
+      str_replace_all("\\u00e2\\u20ac\\u02dc", "’") %>% 
+      str_replace_all("\\u00e2\\u20ac", "€") %>% 
+      str_replace_all("\\\\\\\"", "\"") %>%  # Convert escaped quotes
+      str_replace_all("\\\\u00a", " ") %>%   # Remove other artifacts like \u00a
+      str_replace_all("\\\\u00b", " ") %>%   # Handle \u00b
+      str_replace_all("\\\\u00c", " ") %>%   # Handle \u00c
 
-df_HoC_2000s <- df_HoC %>% 
-  filter(date >= "2000-01-01" & date <= "2020-12-31")
-
-df_HoC_2000s %>% colnames
+      # Remove any remaining Unicode sequences
+      str_replace_all("\\\\u[0-9a-fA-F]{4}", "") %>%
+      
+      # Optional: Replace common placeholders or fallback text for unmatched Unicode
+      str_replace_all("\u0090£", "£") %>%
+      str_replace_all("\u20acOn", "€ On") %>%  # Contextual corrections
+      str_replace_all("[^[:print:]]", "")     # Remove non-printable characters
+  )
 ```
+
+
+```{r}
+# Check for Remaining Unicode Artifacts
+df_HoC_2000s %>% 
+  filter(str_detect(text, "\u00c2\u00a3")) %>% 
+  count()
+
+df_HoC_2000s %>%
+  filter(str_detect(text, "\u00e2\u20ac\u0153")) %>% 
+  count()
+
+df_HoC_2000s %>%
+  filter(str_detect(text, "\u00e2\u20ac\u009d")) %>% 
+  count()
+
+df_HoC_2000s %>%
+  filter(str_detect(text, "\\\\")) %>% 
+  count()
+
+# Check for "\u00e2\u0090\u00a3"
+df_HoC_2000s %>%
+  filter(str_detect(text, "\u00a")) %>% 
+  count()
+
+# remove df_HoC_raw from memory
+rm(df_HoC_raw)
+
+
+```
+
+```{r}
+# Save df_HoC_2000s as a csv file
+setwd("H:/MA_Thesis/data/Rauh_Schwalbach_2020_ParlSpeech/")
+write.csv(df_HoC_2000s, "df_HoC_2000s.csv", row.names = FALSE)
+
+# Load up df_HoC_2000s
+setwd("H:/MA_Thesis/data/Rauh_Schwalbach_2020_ParlSpeech/")
+df_HoC_2000s <- read.csv("df_HoC_2000s.csv")
+```
+
 
 ### Preview
 ```{r}

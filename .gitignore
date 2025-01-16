@@ -1,6 +1,7 @@
 .env
 .Rproj.user
 .Rhistory
+.Rdata
 
 # Data Files
 data/Rauh_Schwalbach_2020_ParlSpeech/Corp_HouseOfCommons_V2.rds
@@ -9,6 +10,7 @@ data/Rauh_Schwalbach_2020_ParlSpeech/df_Con.csv
 data/Rauh_Schwalbach_2020_ParlSpeech/df_Lab.csv
 data/Rauh_Schwalbach_2020_ParlSpeech/df_LibDem.csv
 data/Rauh_Schwalbach_2020_ParlSpeech/*csv
+data/Rauh_Schwalbach_2020_ParlSpeech/HoC_boris_johnson.jsonl
 
 data/Blumenau_2021/*csv
 data/Blumenau_2021/*xlsx
@@ -19,5 +21,4 @@ venv/
 # Code Files
 code/chatbot_whatsapp.ipynb
 
-# Results
-results/HoC_boris_johnson.jsonl
+
