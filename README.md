@@ -1,16 +1,18 @@
 # Simulating UK Parliamentary Debates with Generative Agents
 
+**MiniHoc_v1**
++ Gpt 4.0
 
+**MiniHoc_v2**
+**finetune_v2 + preprocess_v1**
++ GPT 4.0 
++ Llama 3.2-Instruct
 
-MiniHoc_v1 (Gpt 4.0)
-
-MiniHoc_v2 + finetune_v2 + preprocess_v1
-+ GPT 4.0 +  
-+ Llama 3.2 Instruct
-
-MiniHoc_v3 + finetune_v3 + preprocess_v2 + preprocess_v3
+**MiniHoc_v3**
+**finetune_Llama_v3_TheresaMay + Preprocess_data_TheresaMay**
+**finetune_Llama_v3_DavidCameron + Preprocess_data_DavidCameron**
 + GPT 4.0
-+ Llama 3.2 Instruct
++ Llama 3.2-Instruct-finetuned
 
 
 
