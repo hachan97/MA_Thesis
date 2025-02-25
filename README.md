@@ -1,20 +1,16 @@
 # Simulating UK Parliamentary Debates with Generative Agents
 
-**MiniHoc_v1**
-+ Gpt 4.0
+**Gpt 4.0**
+- MiniHoc_v1
+  
+**GPT 4.0 + Llama 3.2-Instruct**
+- MiniHoc_v2
+- finetune_v2 + preprocess_v1
 
-**MiniHoc_v2**
-**finetune_v2 + preprocess_v1**
-+ GPT 4.0 
-+ Llama 3.2-Instruct
-
-**MiniHoc_v3**
-**finetune_Llama_v3_TheresaMay + Preprocess_data_TheresaMay**
-**finetune_Llama_v3_DavidCameron + Preprocess_data_DavidCameron**
-+ GPT 4.0
-+ Llama 3.2-Instruct-finetuned
-
-
+**GPT 4.0 + Llama 3.2-Instruct-finetuned**
+- MiniHoc_v3
+- finetune_Llama_v3_TheresaMay + Preprocess_data_TheresaMay
+- finetune_Llama_v3_DavidCameron + Preprocess_data_DavidCameron
 
 This project explores how **large language models (LLMs)** can simulate **UK House of Commons debates** using generative agents with **memory, saliency scoring, and dialogue generation**. The goal is to evaluate how well AI-driven agents replicate **real-world parliamentary discourse** by comparing generated debates to actual **House of Commons transcripts**.
 
