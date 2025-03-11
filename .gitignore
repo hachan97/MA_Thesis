@@ -15,10 +15,17 @@ data/Rauh_Schwalbach_2020_ParlSpeech/HoC_boris_johnson.jsonl
 data/Blumenau_2021/*csv
 data/Blumenau_2021/*xlsx
 
+data/*csv
+data/*jsonl
+
+# Results Files
+results/Archives
+results/*csv
+
 # Virtual Environment
 venv/
 
 # Code Files
-code/chatbot_whatsapp.ipynb
+code/code_references
 
-
+*.ipynb
