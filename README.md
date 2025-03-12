@@ -97,4 +97,5 @@ The performance of the AI-generated parliamentary debates is assessed using mult
     - **BERTopic Modeling:** Evaluating topical coherence and coverage in simulated vs. real debates.
     - **BERTScore & Sentence-Transformers Similarity:** Measuring semantic fidelity between AI-generated and real parliamentary speeches.
     - **Cross-Party Linguistic Coordination with LIWC:** Analyzing how AI-generated debates mimic adversarial or bipartisan dynamics.
-    - **Perturbation Analysis with LSM:** Testing how AI agents respond to geopolitical or economic shocks in debate settings.
+    - **Perturbation Analysis with LSM:** Testing how AI agents respond to geopolitical or economic shocks in debate settings:
+      ![Impact of Perturbations on Debate Linguistic Alignment](results/perturbation_LSM.png)
